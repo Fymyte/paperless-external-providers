@@ -208,7 +208,10 @@ def test_expired_token_logs_in_again_once(httpx_mock, http):
 def test_second_401_is_an_auth_error(httpx_mock, http):
     _login_ok(httpx_mock)
     httpx_mock.add_response(
-        method="GET", url=FOLDERS, status_code=401, is_reusable=True,
+        method="GET",
+        url=FOLDERS,
+        status_code=401,
+        is_reusable=True,
     )
     httpx_mock.add_response(method="POST", url=LOGIN, json={"token": "T2"})
 
@@ -248,7 +251,8 @@ def test_download_unsafe_filename_stays_in_dest(httpx_mock, http, tmp_path):
     )
     with _provider(http) as provider:
         path = provider.download(
-            RemoteDocument(remote_id="d1", filename="a.pdf"), tmp_path,
+            RemoteDocument(remote_id="d1", filename="a.pdf"),
+            tmp_path,
         )
     assert path == tmp_path / "x.pdf"
 
@@ -258,7 +262,8 @@ def test_download_without_header_uses_listed_name(httpx_mock, http, tmp_path):
     httpx_mock.add_response(method="POST", url=DOWNLOAD, content=b"%PDF")
     with _provider(http) as provider:
         path = provider.download(
-            RemoteDocument(remote_id="d1", filename="a.pdf"), tmp_path,
+            RemoteDocument(remote_id="d1", filename="a.pdf"),
+            tmp_path,
         )
     assert path == tmp_path / "a.pdf"
 
