@@ -1,0 +1,34 @@
+# Add this service to the docker-compose.yml that runs Paperless-ngx.
+# "webserver" is the service name the official compose files use.
+services:
+  sources:
+    build: .
+    restart: unless-stopped
+    # Compose mounts file secrets with their host owner and mode. Run as the
+    # owner of ./secrets and ./data, set UID and GID in .env (`id -u`, `id -g`)
+    user: "${UID:-1000}:${GID:-1000}"
+    # Only /data and /tmp are written. /tmp holds each download until upload
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - webserver
+    volumes:
+      - ./config.toml:/config/config.toml:ro
+      - ./data:/data
+    environment:
+      PAPERLESS_TOKEN_FILE: /run/secrets/paperless_token
+      SOURCE_PAYSLIPS_PASSWORD_FILE: /run/secrets/edocperso_password
+    secrets:
+      - paperless_token
+      - edocperso_password
+
+secrets:
+  paperless_token:
+    file: ./secrets/paperless_token
+  edocperso_password:
+    file: ./secrets/edocperso_password

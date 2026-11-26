@@ -1,0 +1,81 @@
+[project]
+name = "paperless-sources"
+version = "0.1.0"
+description = "Pull documents from external services and upload them to Paperless-ngx"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+  "httpx>=0.28",
+]
+scripts.paperless-sources = "paperless_sources.__main__:main"
+# Third-party providers register here, the same way paperless parsers use paperless_ngx.parsers
+entry-points."paperless_sources.providers".edocperso = "paperless_sources.providers.edocperso:EDocPersoProvider"
+
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatchling" ]
+
+[dependency-groups]
+dev = [
+  { include-group = "lint" },
+  { include-group = "testing" },
+]
+lint = [
+  "ruff~=0.16.1",
+]
+testing = [
+  "pytest~=9.1.1",
+  "pytest-httpx",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+src = [ "src" ]
+fix = true
+show-fixes = true
+output-format = "grouped"
+format.line-ending = "lf"
+# Same rule set as paperless-ngx, so the code can move there without lint churn
+lint.select = [ "E4", "E7", "E9", "F" ]
+lint.extend-select = [
+  "COM",
+  "EXE",
+  "FBT",
+  "FLY",
+  "G201",
+  "I",
+  "ICN",
+  "INP",
+  "ISC",
+  "PIE",
+  "PLC",
+  "PLE",
+  "PTH",
+  "Q",
+  "RSE",
+  "RUF",
+  "SIM",
+  "T20",
+  "TC",
+  "TID",
+  "UP",
+  "W",
+]
+lint.ignore = [ "ICN001", "PLC0415", "RUF012", "SIM105" ]
+lint.per-file-ignores."tests/*.py" = [ "E501", "INP001", "SIM117" ]
+lint.isort.force-single-line = true
+
+[tool.pytest]
+minversion = "9.0"
+strict_config = true
+pythonpath = [ "src" ]
+testpaths = [ "tests" ]
+addopts = [ "--pythonwarnings=all" ]

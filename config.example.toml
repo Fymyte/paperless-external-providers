@@ -1,0 +1,35 @@
+# Seconds between two sync cycles
+poll_interval = 3600
+# Uploads of one document before it is left as failed
+max_attempts = 3
+state_path = "/data/state.sqlite3"
+
+[paperless]
+# PAPERLESS_URL overrides it. The token only comes from PAPERLESS_TOKEN or
+# PAPERLESS_TOKEN_FILE
+url = "http://webserver:8000"
+
+[[sources]]
+# Lowercase letters, digits, "-" and "_". It also names the secret variables:
+# SOURCE_PAYSLIPS_PASSWORD or SOURCE_PAYSLIPS_PASSWORD_FILE
+name = "payslips"
+provider = "edocperso"
+enabled = true
+
+[sources.config]
+# Any value can also come from SOURCE_PAYSLIPS_<FIELD>
+login = "me@example.com"
+# Folder paths at eDocPerso, case-insensitive, matched as a prefix. Leave out
+# to import everything. --list-only shows the paths
+# folders = ["Mes employeurs"]
+# eDocPerso document types (typeCode). PAYE is a payslip. Leave out for all
+# type_codes = ["PAYE"]
+
+# Applied to every document from this source. Names or IDs. The names must
+# already exist in Paperless-ngx
+[sources.upload]
+tags = ["Payslip"]
+# correspondent = "ACME"
+# document_type = "Payslip"
+# storage_path = "Payslips"
+# custom_fields = ["Net pay"]
