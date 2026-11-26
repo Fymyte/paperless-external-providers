@@ -64,6 +64,24 @@ Run one cycle by hand with `docker compose run --rm sources --once`.
 with each document (`new`, `queued`, `done`, `retry`, `gave-up`). It downloads
 nothing and does not call Paperless-ngx. Use it before the first real run.
 
+## Published Image
+
+CI publishes `ghcr.io/fymyte/paperless-external-providers` for `linux/amd64`
+and `linux/arm64`:
+
+- `:main` and `:sha-<commit>` on every push to `main`
+- `:X.Y.Z`, `:X.Y` and `:latest` on a `vX.Y.Z` tag
+
+To use it instead of a local build, replace `build: .` with
+`image: ghcr.io/fymyte/paperless-external-providers:latest` in the compose
+file. Each image has a build provenance attestation. Check that an image
+was built by this repository's CI with:
+
+```console
+$ gh attestation verify oci://ghcr.io/fymyte/paperless-external-providers:latest \
+    --owner Fymyte
+```
+
 ## Configuration
 
 Secrets are never read from `config.toml`. For a source named `payslips`, a
